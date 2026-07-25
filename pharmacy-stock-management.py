@@ -279,3 +279,45 @@ def inventory_report():
     print("============================")
     cur.close()
     conn.close()
+
+def main():
+    setup_database()
+    print("Welcome to the Pharmacy Stock Management System")
+    running = True
+    while running:
+        print("\n***** What do you want to do? *****")
+        print("1. Add medicine")
+        print("2. View medicine stocks")
+        print("3. Search medicine")
+        print("4. Update medicine")
+        print("5. Delete medicine")
+        print("6. Medicine alerts")
+        print("7. Requests")
+        print("8. Reports")
+        print("9. Exit")
+        choice = input("Choose an option (1-9): ")
+ 
+        if choice == "1":
+            add_medicine()
+        elif choice == "2":
+            view_stock()
+        elif choice == "3":
+            search_medicine()
+        elif choice == "4":
+            update_medicine()
+        elif choice == "5":
+            delete_medicine()
+        elif choice == "6":
+            medicine_alerts()
+        elif choice == "7":
+            make_request()
+        elif choice == "8":
+            inventory_report()
+        elif choice == "9":
+            print("Goodbye!")
+            running = False
+        else:
+            print("Wrong option, please choose between 1 and 9.")
+ 
+ 
+main()
