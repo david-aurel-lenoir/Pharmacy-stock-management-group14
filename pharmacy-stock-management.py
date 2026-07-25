@@ -77,3 +77,21 @@ def ask_price(question):
             return price
         except ValueError:
             print("Please type a number.")
+
+
+def add_medicine():
+    conn = connect()
+    cur = conn.cursor()
+    again = "Y"
+    while again.upper() == "Y":
+        name = input("Enter the name of the medicine: ")
+        quantity = ask_number("Enter the quantity: ")
+        price = ask_price("Enter the price: ")
+        expiry = ask_date("Enter the expiry date (dd/mm/yyyy): ")
+        cur.execute("INSERT INTO medicines (name, quantity, price, expiry_date) VALUES (%s, %s, %s, %s)",
+                    (name, quantity, price, expiry))
+        conn.commit()
+        print(name + " added successfully!")
+        again = input("Do you want to add another? (Y/N): ")
+    cur.close()
+    conn.close()
