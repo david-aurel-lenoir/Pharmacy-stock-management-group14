@@ -237,3 +237,15 @@ def medicine_alerts():
  
     cur.close()
     conn.close()
+
+def make_request():
+    name = input("Name of the medicine being requested: ")
+    description = input("Write a brief description: ")
+    conn = connect()
+    cur = conn.cursor()
+    cur.execute("INSERT INTO requests (name, description, request_date) VALUES (%s, %s, %s)",
+                (name, description, datetime.now().date()))
+    conn.commit()
+    cur.close()
+    conn.close()
+    print("Request made successfully!")
