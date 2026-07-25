@@ -79,8 +79,8 @@ def ask_price(question):
             return price
         except ValueError:
             print("Please type a number.")
- 
- 
+
+
 def add_medicine():
     conn = connect()
     cur = conn.cursor()
@@ -97,8 +97,8 @@ def add_medicine():
         again = input("Do you want to add another? (Y/N): ")
     cur.close()
     conn.close()
- 
- 
+
+
 def view_stock():
     conn = connect()
     cur = conn.cursor()
@@ -131,8 +131,7 @@ def search_medicine():
                   " | price: " + str(row[3]) + " | expires: " + row[4].strftime("%d/%m/%Y"))
     cur.close()
     conn.close()
- 
- 
+
 def update_medicine():
     view_stock()
     med_id = ask_number("Enter the ID of the medicine you want to update: ")
@@ -206,7 +205,7 @@ def delete_medicine():
         print(row[0] + " deleted successfully!")
     cur.close()
     conn.close()
- 
+
  
 def medicine_alerts():
     today = datetime.now().date()
@@ -242,7 +241,7 @@ def medicine_alerts():
     cur.close()
     conn.close()
  
- 
+
 def make_request():
     name = input("Name of the medicine being requested: ")
     description = input("Write a brief description: ")
@@ -254,7 +253,7 @@ def make_request():
     cur.close()
     conn.close()
     print("Request made successfully!")
- 
+
  
 def inventory_report():
     conn = connect()
