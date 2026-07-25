@@ -95,3 +95,20 @@ def add_medicine():
         again = input("Do you want to add another? (Y/N): ")
     cur.close()
     conn.close()
+
+
+def view_stock():
+    conn = connect()
+    cur = conn.cursor()
+    cur.execute("SELECT id, name, quantity, price, expiry_date FROM medicines ORDER BY name")
+    rows = cur.fetchall()
+    if len(rows) == 0:
+        print("The inventory is empty.")
+    else:
+        print("\nID | Name | Quantity | Price | Expiry date")
+        print("-" * 45)
+        for row in rows:
+            print(str(row[0]) + " | " + row[1] + " | " + str(row[2]) + " | " +
+                  str(row[3]) + " | " + row[4].strftime("%d/%m/%Y"))
+    cur.close()
+    conn.close()
