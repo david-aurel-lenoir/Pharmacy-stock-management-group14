@@ -202,3 +202,38 @@ def delete_medicine():
         print(row[0] + " deleted successfully!")
     cur.close()
     conn.close()
+
+
+def medicine_alerts():
+    today = datetime.now().date()
+    soon = today + timedelta(days=DAYS_BEFORE_EXPIRY)
+    conn = connect()
+    cur = conn.cursor()
+ 
+    print("\n--- EXPIRED MEDICINES ---")
+    cur.execute("SELECT name, quantity, expiry_date FROM medicines WHERE expiry_date < %s", (today,))
+    rows = cur.fetchall()
+    if len(rows) == 0:
+        print("None")
+    for row in rows:
+        print(row[0] + " | expired on " + row[2].strftime("%d/%m/%Y") + " | quantity: " + str(row[1]))
+ 
+    print("\n--- EXPIRING SOON ---")
+    cur.execute("SELECT name, quantity, expiry_date FROM medicines WHERE expiry_date >= %s AND expiry_date <= %s",
+                (today, soon))
+    rows = cur.fetchall()
+    if len(rows) == 0:
+        print("None")
+    for row in rows:
+        print(row[0] + " | expires on " + row[2].strftime("%d/%m/%Y") + " | quantity: " + str(row[1]))
+ 
+    print("\n--- LOW STOCK ---")
+    cur.execute("SELECT name, quantity FROM medicines WHERE quantity <= %s", (LOW_STOCK,))
+    rows = cur.fetchall()
+    if len(rows) == 0:
+        print("None")
+    for row in rows:
+        print(row[0] + " | only " + str(row[1]) + " left")
+ 
+    cur.close()
+    conn.close()
