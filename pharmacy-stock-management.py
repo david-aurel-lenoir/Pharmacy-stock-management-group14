@@ -249,3 +249,33 @@ def make_request():
     cur.close()
     conn.close()
     print("Request made successfully!")
+
+def inventory_report():
+    conn = connect()
+    cur = conn.cursor()
+    cur.execute("SELECT COUNT(*), SUM(quantity), SUM(quantity * price) FROM medicines")
+    row = cur.fetchone()
+    total_meds = row[0]
+    total_items = row[1]
+    total_value = row[2]
+    if total_items is None:
+        total_items = 0
+    if total_value is None:
+        total_value = 0
+ 
+    print("\n===== INVENTORY REPORT =====")
+    print("Date: " + datetime.now().strftime("%d/%m/%Y"))
+    print("Different medicines: " + str(total_meds))
+    print("Total items in stock: " + str(total_items))
+    print("Total stock value: " + str(total_value))
+ 
+    print("\nRequests made:")
+    cur.execute("SELECT name, description, request_date FROM requests")
+    rows = cur.fetchall()
+    if len(rows) == 0:
+        print("None")
+    for row in rows:
+        print("- " + row[0] + " (" + row[2].strftime("%d/%m/%Y") + "): " + row[1])
+    print("============================")
+    cur.close()
+    conn.close()
