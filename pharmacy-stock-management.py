@@ -112,3 +112,20 @@ def view_stock():
                   str(row[3]) + " | " + row[4].strftime("%d/%m/%Y"))
     cur.close()
     conn.close()
+
+
+def search_medicine():
+    name = input("Enter the medicine name to search: ")
+    conn = connect()
+    cur = conn.cursor()
+    cur.execute("SELECT id, name, quantity, price, expiry_date FROM medicines WHERE name LIKE %s",
+                ("%" + name + "%",))
+    rows = cur.fetchall()
+    if len(rows) == 0:
+        print("No medicine found with that name.")
+    else:
+        for row in rows:
+            print(str(row[0]) + " | " + row[1] + " | quantity: " + str(row[2]) +
+                  " | price: " + str(row[3]) + " | expires: " + row[4].strftime("%d/%m/%Y"))
+    cur.close()
+    conn.close()
