@@ -52,4 +52,28 @@ def ask_number(question):
         answer = input(question)
         if answer.isdigit():
             return int(answer)
-        print("Please type a number.")    
+        print("Please type a number.")
+
+
+def ask_date(question):
+    # keeps asking until the user types a real date
+    while True:
+        answer = input(question)
+        try:
+            return datetime.strptime(answer, "%d/%m/%Y").date()
+        except ValueError:
+            print("Wrong format. Please use dd/mm/yyyy.")
+
+
+def ask_price(question):
+    # keeps asking until the user types a real price (whole number or decimal)
+    while True:
+        answer = input(question)
+        try:
+            price = float(answer)
+            if price < 0:
+                print("Price cannot be negative.")
+                continue
+            return price
+        except ValueError:
+            print("Please type a number.")
