@@ -14,3 +14,14 @@ DATABASE = "defaultdb"
  
 LOW_STOCK = 10           # quantity at or below this = low stock
 DAYS_BEFORE_EXPIRY = 30  # warn when a medicine expires within this many days
+
+def connect():
+    # opens the connection to our online MySQL database
+    return mysql.connector.connect(
+        host=HOST,
+        port=PORT,
+        user=USER,
+        password=PASSWORD,
+        database=DATABASE,
+        use_pure=True
+    )
