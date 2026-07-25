@@ -52,7 +52,7 @@ pip install mysql-connector-python
 From the folder containing the file, run:
 
 ```bash
-python `pharmacy-stock-managment.py`
+python3 `pharmacy-stock-managment.py`
 ```
 
 You'll see a welcome message followed by the main menu. Type the number of
