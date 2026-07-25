@@ -25,3 +25,23 @@ def connect():
         database=DATABASE,
         use_pure=True
     )
+
+
+def setup_database():
+    # creates the tables the first time the program runs
+    conn = connect()
+    cur = conn.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS medicines (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    name VARCHAR(100),
+                    quantity INT,
+                    price DECIMAL(10,2),
+                    expiry_date DATE)""")
+    cur.execute("""CREATE TABLE IF NOT EXISTS requests (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    name VARCHAR(100),
+                    description VARCHAR(255),
+                    request_date DATE)""")
+    conn.commit()
+    cur.close()
+    conn.close()
