@@ -129,3 +129,53 @@ def search_medicine():
                   " | price: " + str(row[3]) + " | expires: " + row[4].strftime("%d/%m/%Y"))
     cur.close()
     conn.close()
+
+def update_medicine():
+    view_stock()
+    med_id = ask_number("Enter the ID of the medicine you want to update: ")
+    conn = connect()
+    cur = conn.cursor()
+    cur.execute("SELECT name, quantity FROM medicines WHERE id = %s", (med_id,))
+    row = cur.fetchone()
+    if row is None:
+        print("That ID does not exist.")
+        cur.close()
+        conn.close()
+        return
+ 
+    print("Press N to change the name, Q for the quantity, P for the price")
+    choice = input("Your choice: ").upper()
+ 
+    if choice == "N":
+        new_name = input("Enter the new name: ")
+        cur.execute("UPDATE medicines SET name = %s WHERE id = %s", (new_name, med_id))
+        print("Name updated successfully!")
+    elif choice == "Q":
+        action = input("Press A to add quantity or S to deduct quantity: ").upper()
+        amount = ask_number("Enter the amount: ")
+        if action == "A":
+            new_quantity = row[1] + amount
+        elif action == "S":
+            new_quantity = row[1] - amount
+            if new_quantity < 0:
+                print("You cannot deduct more than what is in stock.")
+                cur.close()
+                conn.close()
+                return
+        else:
+            print("Wrong choice.")
+            cur.close()
+            conn.close()
+            return
+        cur.execute("UPDATE medicines SET quantity = %s WHERE id = %s", (new_quantity, med_id))
+        print(row[0] + "'s quantity updated successfully! New quantity: " + str(new_quantity))
+    elif choice == "P":
+        new_price = ask_price("Enter the new price: ")
+        cur.execute("UPDATE medicines SET price = %s WHERE id = %s", (new_price, med_id))
+        print("Price updated successfully!")
+    else:
+        print("Wrong choice.")
+ 
+    conn.commit()
+    cur.close()
+    conn.close()
