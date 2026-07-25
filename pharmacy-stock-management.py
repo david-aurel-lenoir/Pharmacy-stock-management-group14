@@ -45,3 +45,11 @@ def setup_database():
     conn.commit()
     cur.close()
     conn.close()
+
+def ask_number(question):
+    # keeps asking until the user types a real number
+    while True:
+        answer = input(question)
+        if answer.isdigit():
+            return int(answer)
+        print("Please type a number.")    
