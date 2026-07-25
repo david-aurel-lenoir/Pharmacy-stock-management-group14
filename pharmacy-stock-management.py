@@ -179,3 +179,26 @@ def update_medicine():
     conn.commit()
     cur.close()
     conn.close()
+
+def delete_medicine():
+    view_stock()
+    med_id = ask_number("Enter the ID of the medicine you want to delete: ")
+    conn = connect()
+    cur = conn.cursor()
+    cur.execute("SELECT name, quantity FROM medicines WHERE id = %s", (med_id,))
+    row = cur.fetchone()
+    if row is None:
+        print("That ID does not exist.")
+    else:
+        if row[1] > 0:
+            confirm = input("There are still " + str(row[1]) + " left in stock. Delete anyway? (Y/N): ")
+            if confirm.upper() != "Y":
+                print("Deletion cancelled.")
+                cur.close()
+                conn.close()
+                return
+        cur.execute("DELETE FROM medicines WHERE id = %s", (med_id,))
+        conn.commit()
+        print(row[0] + " deleted successfully!")
+    cur.close()
+    conn.close()
