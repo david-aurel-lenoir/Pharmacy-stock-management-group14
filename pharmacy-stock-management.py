@@ -102,7 +102,7 @@ def add_medicine():
 def view_stock():
     conn = connect()
     cur = conn.cursor()
-    cur.execute("SELECT id, name, quantity, price, expiry_date FROM medicines ORDER BY name")
+    cur.execute("SELECT id, name, quantity, price, expiry_date FROM medicines ORDER BY id")
     rows = cur.fetchall()
     if len(rows) == 0:
         print("The inventory is empty.")
@@ -201,6 +201,14 @@ def delete_medicine():
                 conn.close()
                 return
         cur.execute("DELETE FROM medicines WHERE id = %s", (med_id,))
+        # renumber the remaining medicines so ids stay contiguous (1, 2, 3, ...)
+        cur.execute("""UPDATE medicines m
+                        JOIN (SELECT id, ROW_NUMBER() OVER (ORDER BY id) AS new_id
+                              FROM medicines) t ON m.id = t.id
+                        SET m.id = t.new_id""")
+        cur.execute("SELECT COALESCE(MAX(id), 0) + 1 FROM medicines")
+        next_id = cur.fetchone()[0]
+        cur.execute("ALTER TABLE medicines AUTO_INCREMENT = %s", (next_id,))
         conn.commit()
         print(row[0] + " deleted successfully!")
     cur.close()
